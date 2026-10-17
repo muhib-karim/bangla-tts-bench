@@ -5,3 +5,4 @@ vq
 *.env
 kaggle/out/
 .pytest_cache/
+kaggle/*/kernel.py

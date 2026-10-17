@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this benchmark, test set or normaliser, please cite it as below."
+title: "bangla-tts-bench: a measured Bangla text-to-speech benchmark and a Bangla LoRA for VoxCPM2"
+authors:
+  - family-names: Karim
+    given-names: Muhib
+repository-code: "https://github.com/muhib-karim/bangla-tts-bench"
+license: MIT
+version: 0.1.0
+date-released: 2026-10-18
+keywords:
+  - Bangla
+  - Bengali
+  - text-to-speech
+  - benchmark
+  - LoRA
