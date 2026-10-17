@@ -26,11 +26,11 @@ is better. Full tables, including strict CER and per-clip transcripts: [`results
 |---|---|---|---|---|---|---|---|---|---|
 | OpenAI gpt-4o-mini-tts | paid API | **7.5** | 27/50 | 2.0 | 0.4 | 16.1 | 4.0 | 19.3 | 0 |
 | ElevenLabs v3 | paid API | 12.8 | 28/50 | 0.6 | 5.7 | 37.0 | 3.6 | 20.8 | 3 |
+| Indic-Parler-TTS | open, CPU | 14.3 | 27/50 | 14.2 | 14.7 | 23.9 | 6.7 | **9.2** | 3 |
 | Meta MMS-TTS (ben) | open, CPU | 27.3 | 16/50 | 6.2 | 14.1 | 55.8 | 9.0 | 61.5 | 2 |
 | VoxCPM2 base (bnnorm input) | open, GPU | 55.8 | 7/50 | 52.5 | 61.0 | 36.7 | 75.6 | 57.5 | 25 |
 | VoxCPM2 + Bangla LoRA (this repo) | open, GPU | _training_ | | | | | | | |
 | OmniVoice | open, CPU | _running_ | | | | | | | |
-| Indic-Parler-TTS | open, CPU | 14.3 | 27/50 | 14.2 | 14.7 | 23.9 | 6.7 | **9.2** | 3 |
 | Gemini Flash TTS | paid API | _not measured_ (free-tier cap; a labelled n=10 subset is planned) | | | | | | | |
 
 n = 50 sentences, 10 per category. "Judge off-script" counts clips the judge transcribed mostly outside Bengali

@@ -80,7 +80,7 @@ def main():
             nn = f"{st.mean(x['cer'] for x in norm) * 100:.1f}" if norm else "n/a"
             lines.append(f"| {sysname} | {len(raw)} | {st.mean(x['cer'] for x in raw) * 100:.1f} | "
                          f"{st.mean(x['cer_strict'] for x in raw) * 100:.1f} | {sum(x['cer'] == 0 for x in raw)}/{len(raw)} | "
-                         + " | ".join(f"{c:.1f}" for c in cat) + f" | {nn} | {sum(x['off'] for x in raw)} | "
+                         + " | ".join(f"n/a (n={len(raw)})" if c != c else f"{c:.1f}" for c in cat) + f" | {nn} | {sum(x['off'] for x in raw)} | "
                          + (f"{st.mean(x['cer'] for x in raw if not x['off']) * 100:.1f}" if any(not x['off'] for x in raw) else "n/a") + " |")
         lines.append("")
     lat = latency()

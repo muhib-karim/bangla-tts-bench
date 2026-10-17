@@ -4,7 +4,7 @@
 
 | system | n | CER % (normalised) | CER % (strict) | error-free | news | conversational | numbers | conjuncts | banglish | numbers, bnnorm input | judge off-script | CER % excl. off-script |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| gemini-3.1-flash-tts | 1 | 0.0 | 0.0 | 1/1 | 0.0 | nan | nan | nan | nan | n/a | 0 | 0.0 |
+| gemini-3.1-flash-tts | 1 | 0.0 | 0.0 | 1/1 | 0.0 | n/a (n=1) | n/a (n=1) | n/a (n=1) | n/a (n=1) | n/a | 0 | 0.0 |
 | openai-gpt-4o-mini-tts | 50 | 7.5 | 7.8 | 27/50 | 2.0 | 0.4 | 16.1 | 4.0 | 19.3 | 5.1 | 0 | 7.5 |
 | elevenlabs-v3 | 50 | 12.8 | 12.0 | 28/50 | 0.6 | 5.7 | 37.0 | 3.6 | 20.8 | 14.6 | 3 | 7.2 |
 | indic-parler-tts | 50 | 14.3 | 14.2 | 27/50 | 14.2 | 14.7 | 23.9 | 6.7 | 9.2 | 9.5 | 3 | 10.1 |
