@@ -3,8 +3,8 @@ __pycache__/
 vq
 .kg
 *.env
-kaggle/out/
+gpu/out/
 .pytest_cache/
-kaggle/*/kernel.py
+gpu/*/kernel.py
 .cache/
 _site/
