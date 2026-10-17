@@ -7,6 +7,7 @@
 | gemini-3.1-flash-tts | 1 | 0.0 | 0.0 | 1/1 | 0.0 | nan | nan | nan | nan | n/a | 0 | 0.0 |
 | openai-gpt-4o-mini-tts | 50 | 7.5 | 7.8 | 27/50 | 2.0 | 0.4 | 16.1 | 4.0 | 19.3 | 5.1 | 0 | 7.5 |
 | elevenlabs-v3 | 50 | 12.8 | 12.0 | 28/50 | 0.6 | 5.7 | 37.0 | 3.6 | 20.8 | 14.6 | 3 | 7.2 |
+| meta-mms-tts-ben | 50 | 27.3 | 24.3 | 16/50 | 6.2 | 14.1 | 55.8 | 9.0 | 61.5 | 2.7 | 2 | 24.1 |
 
 ## Latency (API systems, same client, per sentence)
 
