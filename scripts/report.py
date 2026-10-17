@@ -25,6 +25,8 @@ def score(judge_csv, rows):
         refs = [ref["spoken"], ref["text"]]
         out.append(dict(system=r["system"], id=rid, variant=variant, category=ref["category"],
                         cer=best_cer(refs, r["hyp"], spoken=True), cer_strict=best_cer(refs, r["hyp"], spoken=False),
+                        off=int(off_script(r["hyp"]) and ref["category"] != "banglish"
+                                or any("\u0a00" <= c <= "\u0dff" or ("\u0900" <= c <= "\u097f" and c not in "\u0964\u0965") for c in r["hyp"])),
                         hyp=r["hyp"]))
     return out
 
@@ -36,6 +38,16 @@ def latency():
             if r["status"] == "ok":
                 lat[r["system"]].append((float(r["ttfb_s"]), float(r["total_s"]), float(r["audio_s"])))
     return lat
+
+
+def off_script(hyp):
+    """True when the judge answered mostly outside Bengali script and Latin (e.g. Gujarati, or romanised Bangla
+    for a fully Bangla sentence). Counted separately: it is a judge failure as much as a TTS one."""
+    letters = [c for c in hyp if c.isalpha()]
+    if not letters:
+        return True
+    bn = sum("\u0980" <= c <= "\u09ff" for c in letters)
+    return bn / len(letters) < 0.5
 
 
 def pct(xs, q):
@@ -55,8 +67,8 @@ def main():
         for s in sc:
             by[s["system"]].append(s)
         lines += [f"## Judge: {name}", "",
-                  "| system | n | CER % (normalised) | CER % (strict) | error-free | " + " | ".join(CATS) + " | numbers, bnnorm input |",
-                  "|---|---|---|---|---|" + "---|" * len(CATS) + "---|"]
+                  "| system | n | CER % (normalised) | CER % (strict) | error-free | " + " | ".join(CATS) + " | numbers, bnnorm input | judge off-script | CER % excl. off-script |",
+                  "|---|---|---|---|---|" + "---|" * len(CATS) + "---|---|---|"]
         order = sorted(by, key=lambda k: st.mean(x["cer"] for x in by[k] if x["variant"] == "raw"))
         for sysname in order:
             raw = [x for x in by[sysname] if x["variant"] == "raw"]
@@ -65,7 +77,8 @@ def main():
             nn = f"{st.mean(x['cer'] for x in norm) * 100:.1f}" if norm else "n/a"
             lines.append(f"| {sysname} | {len(raw)} | {st.mean(x['cer'] for x in raw) * 100:.1f} | "
                          f"{st.mean(x['cer_strict'] for x in raw) * 100:.1f} | {sum(x['cer'] == 0 for x in raw)}/{len(raw)} | "
-                         + " | ".join(f"{c:.1f}" for c in cat) + f" | {nn} |")
+                         + " | ".join(f"{c:.1f}" for c in cat) + f" | {nn} | {sum(x['off'] for x in raw)} | "
+                         + (f"{st.mean(x['cer'] for x in raw if not x['off']) * 100:.1f}" if any(not x['off'] for x in raw) else "n/a") + " |")
         lines.append("")
     lat = latency()
     if lat:

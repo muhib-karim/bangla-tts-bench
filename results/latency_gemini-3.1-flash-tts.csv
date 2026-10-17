@@ -1,0 +1,6 @@
+system,id,variant,status,chars,ttfb_s,total_s,audio_s
+gemini-3.1-flash-tts,n01,raw,"error 429: b'{\n  ""error"": {\n    ""code"": 429,\n    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota ex'",,,,
+gemini-3.1-flash-tts,n01,norm,ok,49,3.638,3.75,4.54
+gemini-3.1-flash-tts,n02,raw,ok,56,4.591,4.717,3.86
+gemini-3.1-flash-tts,n03,raw,"error 429: b'{\n  ""error"": {\n    ""code"": 429,\n    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota ex'",,,,
+gemini-3.1-flash-tts,n04,raw,"error 429: b'{\n  ""error"": {\n    ""code"": 429,\n    ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota ex'",,,,
