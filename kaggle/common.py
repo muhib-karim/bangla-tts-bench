@@ -36,7 +36,7 @@ def synth_set(tts, outdir, rows, tag):
     json.dump(stats, open(f"{outdir}/stats.json", "w"))
     return stats
 
-def prep_data(max_hours=6.0):
+def prep_data(max_hours=6.0, max_dur=None):
     """OpenSLR-37 bn_bd -> 16 kHz wavs + train/heldout jsonl for the single speaker with most audio."""
     import soundfile as sf
     z = f"{T}/bn_bd.zip"
@@ -64,6 +64,8 @@ def prep_data(max_hours=6.0):
         dst = f"{T}/d16/{f}.wav"
         if not os.path.exists(dst):
             subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", wavs[f], "-ac", "1", "-ar", "16000", dst], check=True)
+        if max_dur and sf.info(dst).duration > max_dur:
+            continue
         out.append({"audio": dst, "text": normalise(text)})
     held, train = out[:20], out[20:]
     with open(f"{T}/train.jsonl", "w") as fh:
@@ -72,16 +74,18 @@ def prep_data(max_hours=6.0):
         for x in held: fh.write(json.dumps(x, ensure_ascii=False) + "\n")
     json.dump({"speaker": spk, "hours": dur[spk], "n_train": len(train), "n_heldout": len(held),
                "all_speakers": {s: [round(dur[s], 3), len(by[s])] for s in top}}, open(f"{W}/data_stats.json", "w"), indent=1)
-    log("data ready speaker", spk, "hours", round(dur[spk], 2), "train", len(train))
+    log("data ready speaker", spk, "hours", round(dur[spk], 2), "train", len(train), "max_dur", max_dur)
     return spk
 
-def write_cfg(mdir, steps, save_every, outdir, bs=2, accum=8):
+def write_cfg(mdir, steps, save_every, outdir, bs=2, accum=8, mbt=None, lora=None):
     import yaml
     cfg = yaml.safe_load(open(f"{T}/VoxCPM/conf/voxcpm_v2/voxcpm_finetune_lora.yaml"))
     cfg.update(pretrained_path=mdir, train_manifest=f"{T}/train.jsonl", val_manifest=None, batch_size=bs,
                grad_accum_steps=accum, num_workers=2, preprocessing_num_workers=2, num_iters=steps, max_steps=steps,
                log_interval=5, valid_interval=100000, save_interval=save_every, save_path=outdir,
                tensorboard=f"{T}/tb", warmup_steps=min(100, max(1, steps // 10)))
+    if mbt: cfg["max_batch_tokens"] = mbt
+    if lora: cfg["lora"].update(lora)
     yaml.safe_dump(cfg, open(f"{T}/cfg.yaml", "w"), allow_unicode=True)
     return f"{T}/cfg.yaml"
 

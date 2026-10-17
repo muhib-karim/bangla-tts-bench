@@ -66,6 +66,9 @@ def main():
         by = defaultdict(list)
         for s in sc:
             by[s["system"]].append(s)
+        # GPU systems synthesised only the bnnorm spoken form: score those clips as the system's row, labelled.
+        for k in [k for k in by if not any(x["variant"] == "raw" for x in by[k])]:
+            by[f"{k} (bnnorm input)"] = [dict(x, variant="raw") for x in by.pop(k)]
         lines += [f"## Judge: {name}", "",
                   "| system | n | CER % (normalised) | CER % (strict) | error-free | " + " | ".join(CATS) + " | numbers, bnnorm input | judge off-script | CER % excl. off-script |",
                   "|---|---|---|---|---|" + "---|" * len(CATS) + "---|---|---|"]
