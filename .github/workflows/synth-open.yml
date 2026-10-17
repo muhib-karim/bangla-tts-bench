@@ -1,0 +1,49 @@
+name: synth-open
+on:
+  workflow_dispatch:
+    inputs:
+      systems:
+        description: "comma-separated: mms,omnivoice,indic-parler"
+        default: "mms,omnivoice,indic-parler"
+permissions:
+  contents: write
+jobs:
+  synth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        system: [mms, omnivoice, indic-parler]
+    steps:
+      - uses: actions/checkout@v4
+        if: contains(github.event.inputs.systems, matrix.system)
+      - uses: actions/setup-python@v5
+        if: contains(github.event.inputs.systems, matrix.system)
+        with:
+          python-version: "3.11"
+      - name: install
+        if: contains(github.event.inputs.systems, matrix.system)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install -q soundfile numpy
+          case "${{ matrix.system }}" in
+            mms) pip install -q "transformers>=4.40" ;;
+            omnivoice) pip install -q omnivoice ;;
+            indic-parler) pip install -q git+https://github.com/huggingface/parler-tts.git ;;
+          esac
+      - name: synthesise
+        if: contains(github.event.inputs.systems, matrix.system)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          INDIC_PARLER_ID: ${{ secrets.HF_TOKEN != '' && 'ai4bharat/indic-parler-tts' || 'RXD03/indic-parler-tts' }}
+        run: python scripts/synth_open.py ${{ matrix.system }}
+      - uses: actions/upload-artifact@v4
+        if: always() && contains(github.event.inputs.systems, matrix.system)
+        with:
+          name: audio-${{ matrix.system }}
+          path: |
+            audio/
+            results/rtf_*.csv
+          if-no-files-found: ignore

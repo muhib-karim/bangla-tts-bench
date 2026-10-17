@@ -6,3 +6,4 @@ vq
 kaggle/out/
 .pytest_cache/
 kaggle/*/kernel.py
+.cache/
