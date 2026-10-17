@@ -30,13 +30,13 @@ is better. Full tables, including strict CER and per-clip transcripts: [`results
 | VoxCPM2 base (bnnorm input) | open, GPU | 55.8 | 7/50 | 52.5 | 61.0 | 36.7 | 75.6 | 57.5 | 25 |
 | VoxCPM2 + Bangla LoRA (this repo) | open, GPU | _training_ | | | | | | | |
 | OmniVoice | open, CPU | _running_ | | | | | | | |
-| Indic-Parler-TTS | open, CPU | _running_ | | | | | | | |
+| Indic-Parler-TTS | open, CPU | 14.3 | 27/50 | 14.2 | 14.7 | 23.9 | 6.7 | **9.2** | 3 |
 | Gemini Flash TTS | paid API | _not measured_ (free-tier cap; a labelled n=10 subset is planned) | | | | | | | |
 
 n = 50 sentences, 10 per category. "Judge off-script" counts clips the judge transcribed mostly outside Bengali
 script (for example in Devanagari), which is a sign the voice drifted into another language.
 
-Speed: Meta MMS runs at a real-time factor of 0.33 on a 2-core CPU runner; VoxCPM2 runs at about 2.4 on a free
+Speed: Meta MMS runs at a real-time factor of 0.33 on a 2-core CPU runner and Indic-Parler-TTS at about 7.5; VoxCPM2 runs at about 2.4 on a free
 cloud T4 GPU (slower than real time). API latency per sentence (median total): OpenAI 1.60 s, ElevenLabs v3 2.82 s.
 
 ### Where each system loses
@@ -47,6 +47,8 @@ cloud T4 GPU (slower than real time). API latency per sentence (median total): O
   it read ঢাকা as "ঠাকা". With `bnnorm` input its numbers CER falls to 14.6.
 - **Meta MMS** cannot read digits or Latin script at all (numbers 55.8, Banglish 61.5). With `bnnorm` input its
   numbers CER is 2.7, so most of its gap is the text front end, not the voice.
+- **Indic-Parler-TTS** is the best open model so far (14.3) and the best of all systems on Banglish (9.2), but it
+  is slow on CPU (about 7.5x real time) and drops to 23.9 on numbers; `bnnorm` input brings numbers to 9.5.
 - **VoxCPM2 base** does not list Bangla among its languages. Half its clips were transcribed in Devanagari: it
   drifts into a Hindi accent. On the clips that stayed in Bangla script its CER is 11.1, so the model has the
   capacity and the fine-tune targets the drift.
