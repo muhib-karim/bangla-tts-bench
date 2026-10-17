@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bangla TTS blind listening test</title>
+<style>
+:root{--bg:#0f1115;--fg:#e8e8ea;--mut:#9aa0aa;--acc:#3ecf8e;--card:#181b22}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Noto Sans Bengali",sans-serif;background:var(--bg);color:var(--fg)}
+main{max-width:860px;margin:0 auto;padding:24px}
+h1{font-size:1.5rem;margin:.2em 0}.mut{color:var(--mut)}
+.card{background:var(--card);border-radius:12px;padding:20px;margin:16px 0}
+.sent{font-size:1.4rem;margin:8px 0 16px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+button{background:#262b36;color:var(--fg);border:1px solid #333a48;border-radius:8px;padding:10px 16px;font-size:1rem;cursor:pointer}
+button:hover,button:focus{border-color:var(--acc);outline:none}
+.vote{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{padding:6px;border-bottom:1px solid #2a2f3a;text-align:left}
+audio{width:100%}
+</style>
+</head>
+<body>
+<main>
+<h1>Bangla TTS: blind A/B listening</h1>
+<p class="mut">Each round plays one sentence from two systems, labelled only A and B. Pick the one that sounds more natural and correct.
+The names are shown after you vote. Votes stay in your browser; export them as JSON at the bottom.</p>
+<div class="card" id="round">
+  <div class="mut" id="meta"></div>
+  <div class="sent" id="sent" lang="bn"></div>
+  <div class="pair">
+    <div><b>A</b><audio id="a" controls preload="none"></audio></div>
+    <div><b>B</b><audio id="b" controls preload="none"></audio></div>
+  </div>
+  <div class="vote">
+    <button data-v="A">A is better</button><button data-v="tie">Tie</button><button data-v="B">B is better</button>
+    <button id="next">Skip</button>
+  </div>
+  <p id="reveal" class="mut" aria-live="polite"></p>
+</div>
+<div class="card"><h2>Your votes</h2><table id="tally"></table>
+  <p><button id="export">Export votes (JSON)</button> <button id="reset">Clear</button></p></div>
+<div class="card"><h2>All clips</h2><p class="mut">Every system on every sentence, not blind.</p><div id="grid"></div></div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
