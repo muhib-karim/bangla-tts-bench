@@ -33,7 +33,7 @@ is better. Full tables, including strict CER and per-clip transcripts: [`results
 | OmniVoice | open, CPU | _running_ | | | | | | | |
 | Gemini Flash TTS | paid API | _not measured_ (free-tier cap; a labelled n=10 subset is planned) | | | | | | | |
 
-n = 50 sentences, 10 per category. "Judge off-script" counts clips the judge transcribed mostly outside Bengali
+n = 50 sentences: news 12, conversational 12, numbers 10, conjuncts 8, Banglish 8. "Judge off-script" counts clips the judge transcribed mostly outside Bengali
 script (for example in Devanagari), which is a sign the voice drifted into another language.
 
 Speed: Meta MMS runs at a real-time factor of 0.33 on a 2-core CPU runner and Indic-Parler-TTS at about 7.5; VoxCPM2 runs at about 2.4 on a free
@@ -69,8 +69,8 @@ checkpoint.
 
 ## Method notes
 
-- Test set: [`data/testset.tsv`](data/testset.tsv), 50 sentences in 5 categories (news, conversational,
-  numbers/dates/৳/phone, conjuncts, Banglish code-mix), each with a hand-checked spoken form.
+- Test set: [`data/testset.tsv`](data/testset.tsv), 50 sentences in 5 categories (news 12, conversational 12,
+  numbers/dates/৳/phone 10, conjuncts 8, Banglish code-mix 8), each with a hand-checked spoken form.
 - Every system gets the raw sentence. Number sentences are also synthesised from the `bnnorm` spoken form, reported
   separately, to separate front-end errors from voice errors. GPU systems were synthesised from the spoken form
   only and are labelled "(bnnorm input)".
