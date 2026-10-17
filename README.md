@@ -62,10 +62,15 @@ checkpoint.
 - Base: `openbmb/VoxCPM2` (2B parameters, Apache-2.0).
 - Data: OpenSLR-37 `bn_bd` (Google crowdsourced Bangladeshi Bangla, CC-BY-SA-4.0). The corpus is small: 6
   speakers, 1,891 utterances, 2.94 h. The LoRA uses the speaker with the most audio (0.78 h, 473 utterances),
-  20 utterances held out, clips longer than 8 s dropped. All training text goes through `bnnorm` first.
-- Compute: a free cloud T4 (16 GB). Batch 1 with gradient accumulation 8, 400 steps, checkpoints at 200 and 400.
-  The first attempt at batch 2 ran out of GPU memory; the job now falls back to LM-only LoRA, then rank 16, if
-  the full recipe still does not fit, and records which one ran in `train_cfg_used.json`.
+  20 utterances held out, clips longer than 4 s dropped to fit GPU memory (263 training clips). All training text goes through `bnnorm` first.
+- Compute: a free cloud T4 (16 GB). Batch 1 with gradient accumulation 4, 400 steps (about 6 epochs, 51 min),
+  checkpoints at 200 and 400. The first attempt at batch 2 ran out of GPU memory; the job falls back to LM-only
+  LoRA, then rank 16, if the full recipe does not fit, and records which one ran in `train_cfg_used.json`.
+- Status: the full recipe (LM + diffusion decoder, rank 32) trained all 400 steps in bf16; the diffusion loss
+  went from about 0.68 to about 0.52. Loading the adapter for synthesis then failed: the installed `voxcpm`
+  release builds a default-rank LoRA when no config is passed, which does not match a rank-32 checkpoint. The
+  kernel now passes the training LoRA config explicitly and saves the checkpoint before synthesis; the run is
+  being repeated, and the "after" row is filled in when it finishes.
 
 ## Method notes
 

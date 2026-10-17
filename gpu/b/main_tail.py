@@ -78,7 +78,17 @@ for step in SYNTH_AT:
     if not os.path.isdir(ck):
         log("missing", ck); continue
     try:
-        tts = VoxCPM.from_pretrained(mdir, load_denoiser=False, optimize=False, lora_weights_path=ck)
+        shutil.copytree(ck, f"{W}/lora/step_{step:07d}", dirs_exist_ok=True)  # keep weights even if synth fails
+        # v4 fix: v3 trained at the yaml's LoRA rank (r=32) but the installed loader built a default-rank model
+        # (size mismatch 8 vs 32). Pass the exact LoRA config used for training.
+        import yaml
+        lc = {k: v for k, v in yaml.safe_load(open(cfg))["lora"].items() if k in ("enable_lm", "enable_dit", "enable_proj", "r", "alpha", "dropout")}
+        try:
+            from voxcpm.core import LoRAConfig
+        except ImportError:
+            from voxcpm.model.voxcpm2 import LoRAConfig
+        log("lora cfg for load", lc)
+        tts = VoxCPM.from_pretrained(mdir, load_denoiser=False, optimize=False, lora_config=LoRAConfig(**lc), lora_weights_path=ck)
         synth_set(tts, f"{W}/after_step{step}", rows, f"after{step}")
         hrows = [dict(id=f"h{i:02d}", input=h["text"]) for i, h in enumerate(held[:5])]
         synth_set(tts, f"{W}/after_step{step}_heldout", hrows, f"held{step}")
