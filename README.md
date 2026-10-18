@@ -30,7 +30,7 @@ is better. Full tables, including strict CER and per-clip transcripts: [`results
 | Indic-Parler-TTS | open, CPU | 14.3 | 27/50 | 14.2 | 14.7 | 23.9 | 6.7 | 9.2 | 3 |
 | Meta MMS-TTS (ben) | open, CPU | 27.3 | 16/50 | 6.2 | 14.1 | 55.8 | 9.0 | 61.5 | 2 |
 | VoxCPM2 base (bnnorm input) | open, GPU | 55.8 | 7/50 | 52.5 | 61.0 | 36.7 | 75.6 | 57.5 | 25 |
-| VoxCPM2 + Bangla LoRA (this repo) | open, GPU | _training_ | | | | | | | |
+| VoxCPM2 + Bangla LoRA (this repo) | open, GPU | 37.0 | 20/50 | 27.0 | 45.7 | 38.1 | 35.4 | 39.0 | 17 |
 | Gemini Flash TTS | paid API | _not measured_ (free-tier cap; a labelled n=10 subset is planned) | | | | | | | |
 
 n = 50 sentences: news 12, conversational 12, numbers 10, conjuncts 8, Banglish 8. "Judge off-script" counts clips the judge transcribed mostly outside Bengali
@@ -67,10 +67,13 @@ checkpoint.
   checkpoints at 200 and 400. The first attempt at batch 2 ran out of GPU memory; the job falls back to LM-only
   LoRA, then rank 16, if the full recipe does not fit, and records which one ran in `train_cfg_used.json`.
 - Status: the full recipe (LM + diffusion decoder, rank 32) trained all 400 steps in bf16; the diffusion loss
-  went from about 0.68 to about 0.52. Loading the adapter for synthesis then failed: the installed `voxcpm`
-  release builds a default-rank LoRA when no config is passed, which does not match a rank-32 checkpoint. The
-  kernel now passes the training LoRA config explicitly and saves the checkpoint before synthesis; the run is
-  being repeated, and the "after" row is filled in when it finishes.
+  went from about 0.68 to about 0.52. Scored on the same 50 sentences with the step-400 adapter, CER fell from
+  55.8% to 37.0%, error-free clips rose from 7/50 to 20/50, and clips the judge heard outside Bengali script fell
+  from 25 to 17. Every category improved except numbers (36.7% to 38.1%, both with normalised input). It is
+  still far behind the leaders: one speaker, 0.78 h of audio and 400 steps is a proof of method, not a
+  production voice. The adapter checkpoints (steps 200 and 400) are attached to the v0.2.0 release. A first
+  synthesis attempt failed because the installed `voxcpm` release builds a default-rank LoRA when no config is
+  passed; the kernel now passes the training LoRA config explicitly.
 
 ## Method notes
 
